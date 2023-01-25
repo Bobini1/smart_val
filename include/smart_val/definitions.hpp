@@ -11,12 +11,12 @@
 #define SMART_VAL_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 #include <functional>
 #include <iosfwd>
-#if __cplusplus >= 201402L
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201402L) || __cplusplus >= 201402L)
 #  define SMART_VAL_CONSTEXPR14 constexpr
 #else
 #  define SMART_VAL_CONSTEXPR14
 #endif
-#if __cplusplus >= 201703L
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
 #  define SMART_VAL_NODISCARD [[nodiscard]]
 #else
 #  define SMART_VAL_NODISCARD
