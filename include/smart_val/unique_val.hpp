@@ -13,7 +13,7 @@ class unique_val
 {
 public:
   template<typename... Args>
-  SMART_VAL_CONSTEXPR14 explicit unique_val(Args&&... args) noexcept(
+  constexpr explicit unique_val(Args&&... args) noexcept(
       noexcept(T(SMART_VAL_FWD(args)...)))
       : m_val(SMART_VAL_FWD(args)...)
   {
@@ -41,26 +41,26 @@ public:
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
 
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
+  constexpr SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() const noexcept
+  constexpr SMART_VAL_NODISCARD auto get() const noexcept
       -> const T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() noexcept -> T&
+  constexpr SMART_VAL_NODISCARD auto operator*() noexcept -> T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() const noexcept
+  constexpr SMART_VAL_NODISCARD auto operator*() const noexcept
       -> const T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_val; }
-  SMART_VAL_CONSTEXPR14 auto operator->() const noexcept -> const T*
+  constexpr auto operator->() noexcept -> T* { return &m_val; }
+  constexpr auto operator->() const noexcept -> const T*
   {
     return &m_val;
   }
@@ -75,7 +75,7 @@ class unique_val<T, void>
 {
 public:
   template<typename... Args>
-  SMART_VAL_CONSTEXPR14 explicit unique_val(Args&&... args) noexcept(
+  constexpr explicit unique_val(Args&&... args) noexcept(
       noexcept(T(SMART_VAL_FWD(args)...)))
       : m_val(SMART_VAL_FWD(args)...)
   {
@@ -96,25 +96,25 @@ public:
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
 
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
+  constexpr SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() const noexcept
+  constexpr SMART_VAL_NODISCARD auto get() const noexcept
       -> const T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() noexcept -> T&
+  constexpr SMART_VAL_NODISCARD auto operator*() noexcept -> T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() const noexcept
+  constexpr SMART_VAL_NODISCARD auto operator*() const noexcept
       -> const T&
   {
     return m_val;
   }
-  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_val; }
+  constexpr auto operator->() noexcept -> T* { return &m_val; }
   SMART_VAL_CONSTEXPR14 auto operator->() const noexcept -> const T*
   {
     return &m_val;
@@ -134,7 +134,7 @@ auto operator<<(std::basic_ostream<CharT, Traits>& os,
 }
 
 template<typename T, typename... Args>
-SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto make_unique_val(
+constexpr SMART_VAL_NODISCARD auto make_unique_val(
     Args&&... args) noexcept(noexcept(unique_val<T>(SMART_VAL_FWD(args)...)))
     -> unique_val<T>
 {
