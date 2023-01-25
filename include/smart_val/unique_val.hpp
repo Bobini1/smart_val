@@ -57,7 +57,7 @@ public:
   SMART_VAL_CONSTEXPR20 ~unique_val() noexcept
   {
     if (!m_is_moved_from) {
-      std::get<1>(m_data)(std::get<0>(m_data));
+      detail::invoke(get_destruct(), get());
     }
   }
   auto operator=(const unique_val& other) -> unique_val& = delete;

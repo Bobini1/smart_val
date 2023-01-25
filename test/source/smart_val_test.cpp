@@ -85,3 +85,15 @@ TEST_CASE("unique_val works with user-defined types", "[library]")
   auto val = sv::unique_val<user_defined>(user_defined {});
   REQUIRE(val.get().get() == 42);
 }
+
+TEST_CASE("Destruct can be a member function", "[library]")
+{
+  struct user_defined
+  {
+    auto get() const -> int { return 42; }
+    void destruct() {}
+  };
+  auto val = sv::unique_val<user_defined, decltype(&user_defined::destruct)>(
+      user_defined {}, &user_defined::destruct);
+  REQUIRE(val.get().get() == 42);
+}

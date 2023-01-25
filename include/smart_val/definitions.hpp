@@ -43,18 +43,21 @@ static constexpr auto default_destruct = default_destruct_t {};
 
 namespace detail
 {
-template<class F, class... Args>
-inline auto invoke(F&& function, Args&&... args)
-    -> decltype(SMART_VAL_FWD(function)(SMART_VAL_FWD(args)...))
+template<class F,
+         class Arg,
+         typename = typename std::enable_if<
+             !std::is_member_function_pointer<F>::value>::type>
+inline auto invoke(F&& function, Arg&& arg) noexcept(
+    noexcept(SMART_VAL_FWD(function)(SMART_VAL_FWD(arg)))) -> void
 {
-  return SMART_VAL_FWD(function)(SMART_VAL_FWD(args)...);
+  SMART_VAL_FWD(function)(SMART_VAL_FWD(arg));
 }
 
 template<class Base, class T, class Derived>
-inline auto invoke(T Base::*pmd, Derived&& ref)
-    -> decltype(SMART_VAL_FWD(ref).*pmd)
+inline auto invoke(T Base::*pmd, Derived&& ref) noexcept(
+    noexcept((SMART_VAL_FWD(ref).*(pmd))())) -> void
 {
-  return SMART_VAL_FWD(ref).*pmd;
+  (SMART_VAL_FWD(ref).*(pmd))();
 }
 
 template<typename F, typename... Args>
