@@ -34,6 +34,7 @@ public:
           std::is_nothrow_move_constructible<Destruct>::value)
       : m_data(SMART_VAL_MOV(other.get()), SMART_VAL_MOV(other.get_destruct()))
   {
+    other.m_is_moved_from = true;
   }
   template<typename OtherT, typename OtherDestruct>
   SMART_VAL_CONSTEXPR14
@@ -49,11 +50,14 @@ public:
   {
     std::get<0>(m_data) = SMART_VAL_MOV(other.get());
     std::get<1>(m_data) = SMART_VAL_MOV(other.get_destruct());
+    other.m_is_moved_from = true;
     return *this;
   }
   SMART_VAL_CONSTEXPR20 ~unique_val() noexcept
   {
-    detail::invoke(std::get<1>(m_data), std::get<0>(m_data));
+    if (!m_is_moved_from) {
+      std::get<1>(m_data)(std::get<0>(m_data));
+    }
   }
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
@@ -95,6 +99,7 @@ public:
 
 private:
   std::tuple<T, Destruct> m_data;
+  bool m_is_moved_from = false;
 };
 
 template<typename CharT, typename Traits, typename T, typename Destruct>
