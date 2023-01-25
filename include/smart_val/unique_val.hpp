@@ -19,21 +19,27 @@ public:
   {
   }
   template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 auto operator=(unique_val<T, OtherDeleter>&& other) noexcept(
+  SMART_VAL_CONSTEXPR14 auto
+  operator=(unique_val<T, OtherDeleter>&& other) noexcept(
       std::is_nothrow_move_assignable<T>::value) -> unique_val&
   {
     m_val = SMART_VAL_MOV(other.val);
     return *this;
   }
   template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 explicit unique_val(unique_val<T, OtherDeleter>&& other) noexcept(
-      std::is_nothrow_move_constructible<T>::value)
-      : m_val(SMART_VAL_MOV(other.val)), m_deleter(SMART_VAL_MOV(other.m_deleter))
-  {}
-  SMART_VAL_CONSTEXPR14 ~unique_val() noexcept { detail::invoke(m_deleter, m_val); }
+  SMART_VAL_CONSTEXPR14 explicit unique_val(
+      unique_val<T, OtherDeleter>&&
+          other) noexcept(std::is_nothrow_move_constructible<T>::value)
+      : m_val(SMART_VAL_MOV(other.val))
+      , m_deleter(SMART_VAL_MOV(other.m_deleter))
+  {
+  }
+  SMART_VAL_CONSTEXPR14 ~unique_val() noexcept
+  {
+    detail::invoke(m_deleter, m_val);
+  }
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
-
 
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
@@ -75,7 +81,8 @@ public:
   {
   }
   template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 auto operator=(unique_val<T, OtherDeleter>&& other) noexcept(
+  SMART_VAL_CONSTEXPR14 auto
+  operator=(unique_val<T, OtherDeleter>&& other) noexcept(
       std::is_nothrow_move_assignable<T>::value) -> unique_val&
   {
     m_val = SMART_VAL_MOV(other.m_val);
@@ -84,10 +91,10 @@ public:
   SMART_VAL_CONSTEXPR14 unique_val(unique_val<T>&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value)
       : m_val(SMART_VAL_MOV(other.m_val))
-  {}
+  {
+  }
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
-
 
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
@@ -112,6 +119,7 @@ public:
   {
     return &m_val;
   }
+
 private:
   T m_val;
 };
@@ -126,9 +134,9 @@ auto operator<<(std::basic_ostream<CharT, Traits>& os,
 }
 
 template<typename T, typename... Args>
-SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto
-make_unique_val(Args&&... args) noexcept(noexcept(
-    unique_val<T>(SMART_VAL_FWD(args)...))) -> unique_val<T>
+SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto make_unique_val(
+    Args&&... args) noexcept(noexcept(unique_val<T>(SMART_VAL_FWD(args)...)))
+    -> unique_val<T>
 {
   return unique_val<T>(SMART_VAL_FWD(args)...);
 }

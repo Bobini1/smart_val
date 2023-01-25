@@ -6,20 +6,20 @@
 #define SMART_VAL_DEFINITIONS_HPP
 #include <type_traits>
 #define SMART_VAL_MOV(...) \
-  static_cast<typename std::remove_reference<decltype(__VA_ARGS__)>::type&&>(__VA_ARGS__)
-#define SMART_VAL_FWD(...) \
-  static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
-#include <iosfwd>
+  static_cast<typename std::remove_reference<decltype(__VA_ARGS__)>::type&&>( \
+      __VA_ARGS__)
+#define SMART_VAL_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 #include <functional>
+#include <iosfwd>
 #if __cplusplus >= 201402L
-#define SMART_VAL_CONSTEXPR14 constexpr
+#  define SMART_VAL_CONSTEXPR14 constexpr
 #else
-#define SMART_VAL_CONSTEXPR14
+#  define SMART_VAL_CONSTEXPR14
 #endif
 #if __cplusplus >= 201703L
-#define SMART_VAL_NODISCARD [[nodiscard]]
+#  define SMART_VAL_NODISCARD [[nodiscard]]
 #else
-#define SMART_VAL_NODISCARD
+#  define SMART_VAL_NODISCARD
 #endif
 
 namespace smart_val
