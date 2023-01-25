@@ -2,6 +2,8 @@
 
 #include "smart_val/unique_val.hpp"
 
+static constexpr auto precision = 0.0001;
+
 namespace sv = smart_val;
 TEST_CASE("unique_val can be constructed", "[library]")
 {
@@ -34,4 +36,11 @@ TEST_CASE("unique_val can be moved", "[library]")
   val3 = std::move(val2);
 
   REQUIRE(val3.get() == 42);
+}
+
+TEST_CASE("unique_val can be moved to another type", "[library]")
+{
+  auto val = sv::unique_val<int>(42);
+  auto val2 = sv::unique_val<double>(std::move(val));
+  REQUIRE_THAT(val2.get(), Catch::Matchers::WithinRel(42.0, precision));
 }

@@ -29,6 +29,18 @@
 
 namespace smart_val
 {
+
+struct default_destruct_t
+{
+  template<typename T>
+  void operator()(const T& val) const
+  {
+    (void)val;
+  }
+};
+
+static constexpr auto default_destruct = default_destruct_t {};
+
 namespace detail
 {
 template<class F, class... Args>
