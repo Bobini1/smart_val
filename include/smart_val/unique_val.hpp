@@ -15,9 +15,9 @@ class unique_val
                 "Destruct function must be invocable with T&");
 
 public:
-  template<
-      typename... Args,
-      typename = typename std::enable_if<std::is_constructible<T, Args...>::value>::type>
+  template<typename... Args,
+           typename = typename std::enable_if<
+               std::is_constructible<T, Args...>::value>::type>
   constexpr explicit unique_val(Args&&... args) noexcept(
       noexcept(T(SMART_VAL_FWD(args)...)))
       : m_data(std::make_tuple(T(SMART_VAL_FWD(args)...), default_destruct))
@@ -36,7 +36,8 @@ public:
   {
   }
   template<typename OtherT, typename OtherDestruct>
-  SMART_VAL_CONSTEXPR14 unique_val(OtherT&& other_t, OtherDestruct&& other_destruct) noexcept(
+  SMART_VAL_CONSTEXPR14
+  unique_val(OtherT&& other_t, OtherDestruct&& other_destruct) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
       : m_data(SMART_VAL_FWD(other_t), SMART_VAL_FWD(other_destruct))
