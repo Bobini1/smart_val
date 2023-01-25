@@ -41,7 +41,8 @@ public:
   unique_val(OtherT&& other_t, OtherDestruct&& other_destruct) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
-      : m_data(SMART_VAL_FWD(other_t), SMART_VAL_FWD(other_destruct))
+      : m_data(static_cast<T>(SMART_VAL_FWD(other_t)),
+               static_cast<Destruct>(SMART_VAL_FWD(other_destruct)))
   {
   }
   SMART_VAL_CONSTEXPR14 auto operator=(unique_val&& other) noexcept(
@@ -121,7 +122,6 @@ constexpr SMART_VAL_NODISCARD auto make_unique_val(Args&&... args) noexcept(
 
 }  // namespace smart_val
 
-#include <memory>
 namespace std
 {
 template<typename T, typename Destruct>
