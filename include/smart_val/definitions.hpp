@@ -43,8 +43,8 @@ static constexpr auto default_destruct = default_destruct_t {};
 
 namespace detail
 {
-template<class F,
-         class Arg,
+template<typename F,
+         typename Arg,
          typename = typename std::enable_if<
              !std::is_member_function_pointer<F>::value>::type>
 inline auto invoke(F&& function, Arg&& arg) noexcept(
@@ -53,7 +53,7 @@ inline auto invoke(F&& function, Arg&& arg) noexcept(
   SMART_VAL_FWD(function)(SMART_VAL_FWD(arg));
 }
 
-template<class Base, class T, class Derived>
+template<typename Base, typename T, typename Derived>
 inline auto invoke(T Base::*pmd, Derived&& ref) noexcept(
     noexcept((SMART_VAL_FWD(ref).*(pmd))())) -> void
 {
