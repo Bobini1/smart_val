@@ -44,6 +44,22 @@ inline auto invoke(T Base::*pmd, Derived&& ref)
 {
   return SMART_VAL_FWD(ref).*pmd;
 }
+
+template<typename F, typename... Args>
+struct is_invocable
+    : std::is_constructible<
+          std::function<void(Args...)>,
+          std::reference_wrapper<typename std::remove_reference<F>::type> >
+{
+};
+
+template<typename R, typename F, typename... Args>
+struct is_invocable_r
+    : std::is_constructible<
+          std::function<R(Args...)>,
+          std::reference_wrapper<typename std::remove_reference<F>::type> >
+{
+};
 }  // namespace detail
 }  // namespace smart_val
 #endif  // SMART_VAL_DEFINITIONS_HPP

@@ -11,6 +11,9 @@ namespace smart_val
 template<typename T, typename Deleter = void>
 class unique_val
 {
+  static_assert(detail::is_invocable<Deleter, T&>::value,
+                "Deleter must be invocable with T&");
+
 public:
   template<typename... Args>
   constexpr explicit unique_val(Args&&... args) noexcept(
@@ -18,21 +21,20 @@ public:
       : m_val(SMART_VAL_FWD(args)...)
   {
   }
-  template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 auto
-  operator=(unique_val<T, OtherDeleter>&& other) noexcept(
-      std::is_nothrow_move_assignable<T>::value) -> unique_val&
-  {
-    m_val = SMART_VAL_MOV(other.val);
-    return *this;
-  }
-  template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 explicit unique_val(
-      unique_val<T, OtherDeleter>&&
-          other) noexcept(std::is_nothrow_move_constructible<T>::value)
+  SMART_VAL_CONSTEXPR14 unique_val(unique_val&& other) noexcept(
+      std::is_nothrow_move_constructible<T>::value&&
+          std::is_nothrow_move_constructible<Deleter>::value)
       : m_val(SMART_VAL_MOV(other.val))
       , m_deleter(SMART_VAL_MOV(other.m_deleter))
   {
+  }
+  SMART_VAL_CONSTEXPR14 auto operator=(unique_val&& other) noexcept(
+      std::is_nothrow_move_assignable<T>::value&&
+          std::is_nothrow_move_assignable<Deleter>::value) -> unique_val&
+  {
+    m_val = SMART_VAL_MOV(other.val);
+    m_deleter = SMART_VAL_MOV(other.deleter);
+    return *this;
   }
   SMART_VAL_CONSTEXPR20 ~unique_val() noexcept
   {
@@ -60,6 +62,12 @@ public:
   SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_val; }
   constexpr auto operator->() const noexcept -> const T* { return &m_val; }
 
+  template<typename OtherT, typename OtherDeleter>
+  constexpr explicit operator unique_val<OtherT, OtherDeleter>() const noexcept
+  {
+    return unique_val<OtherT, OtherDeleter>(m_val);
+  }
+
 private:
   T m_val;
   Deleter m_deleter;
@@ -75,21 +83,20 @@ public:
       : m_val(SMART_VAL_FWD(args)...)
   {
   }
-  template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 auto
-  operator=(unique_val<T, OtherDeleter>&& other) noexcept(
+  SMART_VAL_CONSTEXPR14 auto operator=(unique_val&& other) noexcept(
       std::is_nothrow_move_assignable<T>::value) -> unique_val&
   {
     m_val = SMART_VAL_MOV(other.m_val);
     return *this;
   }
-  SMART_VAL_CONSTEXPR14 unique_val(unique_val<T>&& other) noexcept(
+  SMART_VAL_CONSTEXPR14 unique_val(unique_val&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value)
       : m_val(SMART_VAL_MOV(other.m_val))
   {
   }
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
+  SMART_VAL_CONSTEXPR20 ~unique_val() noexcept = default;
 
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
