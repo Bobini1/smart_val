@@ -34,7 +34,7 @@ public:
       , m_deleter(SMART_VAL_MOV(other.m_deleter))
   {
   }
-  SMART_VAL_CONSTEXPR14 ~unique_val() noexcept
+  SMART_VAL_CONSTEXPR20 ~unique_val() noexcept
   {
     detail::invoke(m_deleter, m_val);
   }

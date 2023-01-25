@@ -21,6 +21,11 @@
 #else
 #  define SMART_VAL_NODISCARD
 #endif
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 202002L) || __cplusplus >= 202002L)
+#  define SMART_VAL_CONSTEXPR20 constexpr
+#else
+#  define SMART_VAL_CONSTEXPR20
+#endif
 
 namespace smart_val
 {
