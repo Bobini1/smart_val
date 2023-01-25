@@ -1,0 +1,35 @@
+{
+ "graph_lock": {
+  "nodes": {
+   "0": {
+    "options": "fmt:fPIC=True\nfmt:header_only=False\nfmt:shared=False\nfmt:with_fmt_alias=False\nfmt:with_os_api=True",
+    "requires": [
+     "1"
+    ],
+    "build_requires": [
+     "2"
+    ],
+    "path": "conanfile.py",
+    "context": "host"
+   },
+   "1": {
+    "ref": "fmt/9.1.0",
+    "options": "fPIC=True\nheader_only=False\nshared=False\nwith_fmt_alias=False\nwith_os_api=True",
+    "package_id": "e0e003fc38e6dcc03cdfbaf52057d71baa23adad",
+    "prev": "0",
+    "context": "host"
+   },
+   "2": {
+    "ref": "catch2/2.13.9",
+    "options": "default_reporter=None\nfPIC=True\nwith_benchmark=False\nwith_main=True\nwith_prefix=False",
+    "package_id": "b57da761e74a3f6a68f83b8bd195e4571c63970c",
+    "prev": "0",
+    "modified": true,
+    "context": "host"
+   }
+  },
+  "revisions_enabled": false
+ },
+ "version": "0.4",
+ "profile_host": "[settings]\narch=x86_64\narch_build=x86_64\nbuild_type=Debug\ncompiler=gcc\ncompiler.libcxx=libstdc++\ncompiler.version=12\nos=Linux\nos_build=Linux\n[options]\n[build_requires]\n[env]\n"
+}

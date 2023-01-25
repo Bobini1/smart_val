@@ -1,0 +1,24 @@
+#include <catch2/catch.hpp>
+
+#include "smart_val/unique_val.hpp"
+
+namespace sv = smart_val;
+TEST_CASE("unique_val can be constructed", "[library]")
+{
+  auto val = sv::unique_val<int>();
+  auto val2 = sv::make_unique_val<int>();
+}
+
+TEST_CASE("unique_val's value can be accessed", "[library]")
+{
+  auto val = sv::unique_val<int>(42);
+  REQUIRE(val.get() == 42);
+  REQUIRE(*val == 42);
+  REQUIRE(val.operator->() == &val.get());
+}
+
+TEST_CASE("unique_val is not assignable or copyable", "[library]")
+{
+  STATIC_REQUIRE(!std::is_assignable<sv::unique_val<int>, sv::unique_val<int>>::value);
+  STATIC_REQUIRE(!std::is_copy_constructible<sv::unique_val<int>>::value);
+}
