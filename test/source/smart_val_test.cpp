@@ -17,7 +17,7 @@ TEST_CASE("unique_val's value can be accessed", "[library]")
   REQUIRE(val.operator->() == &val.get());
 }
 
-TEST_CASE("unique_val is not assignable or copyable", "[library]")
+TEST_CASE("unique_val is not assignable or copiable", "[library]")
 {
   STATIC_REQUIRE(
       !std::is_assignable<sv::unique_val<int>&, sv::unique_val<int>&>::value);
