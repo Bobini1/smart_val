@@ -19,6 +19,19 @@ TEST_CASE("unique_val's value can be accessed", "[library]")
 
 TEST_CASE("unique_val is not assignable or copyable", "[library]")
 {
-  STATIC_REQUIRE(!std::is_assignable<sv::unique_val<int>, sv::unique_val<int>>::value);
+  STATIC_REQUIRE(
+      !std::is_assignable<sv::unique_val<int>&, sv::unique_val<int>&>::value);
   STATIC_REQUIRE(!std::is_copy_constructible<sv::unique_val<int>>::value);
+}
+
+TEST_CASE("unique_val can be moved", "[library]")
+{
+  auto val = sv::unique_val<int>(42);
+  auto val2 = std::move(val);
+  REQUIRE(val2.get() == 42);
+
+  auto val3 = sv::unique_val<int>();
+  val3 = std::move(val2);
+
+  REQUIRE(val3.get() == 42);
 }

@@ -26,14 +26,9 @@ public:
     return *this;
   }
   template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 unique_val(unique_val<T, OtherDeleter>&& other) noexcept(
+  SMART_VAL_CONSTEXPR14 explicit unique_val(unique_val<T, OtherDeleter>&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value)
-      : m_val(SMART_VAL_MOV(other.val))
-  {}
-  template<>
-  SMART_VAL_CONSTEXPR14 unique_val(unique_val<T, Deleter>&& other) noexcept(
-      std::is_nothrow_move_constructible<T>::value)
-      : m_val(SMART_VAL_MOV(other.m_val))
+      : m_val(SMART_VAL_MOV(other.val)), m_deleter(SMART_VAL_MOV(other.m_deleter))
   {}
   SMART_VAL_CONSTEXPR14 ~unique_val() noexcept { detail::invoke(m_deleter, m_val); }
   auto operator=(const unique_val& other) -> unique_val& = delete;
@@ -83,15 +78,9 @@ public:
   SMART_VAL_CONSTEXPR14 auto operator=(unique_val<T, OtherDeleter>&& other) noexcept(
       std::is_nothrow_move_assignable<T>::value) -> unique_val&
   {
-    m_val = SMART_VAL_MOV(other.val);
+    m_val = SMART_VAL_MOV(other.m_val);
     return *this;
   }
-  template<typename OtherDeleter>
-  SMART_VAL_CONSTEXPR14 unique_val(unique_val<T, OtherDeleter>&& other) noexcept(
-      std::is_nothrow_move_constructible<T>::value)
-      : m_val(SMART_VAL_MOV(other.val))
-  {}
-  template<>
   SMART_VAL_CONSTEXPR14 unique_val(unique_val<T>&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value)
       : m_val(SMART_VAL_MOV(other.m_val))
