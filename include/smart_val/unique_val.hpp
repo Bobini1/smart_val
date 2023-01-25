@@ -41,12 +41,12 @@ public:
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
 
-  constexpr SMART_VAL_NODISCARD auto get() noexcept -> T& { return m_val; }
+  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T& { return m_val; }
   constexpr SMART_VAL_NODISCARD auto get() const noexcept -> const T&
   {
     return m_val;
   }
-  constexpr SMART_VAL_NODISCARD auto operator*() noexcept -> T&
+  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() noexcept -> T&
   {
     return m_val;
   }
@@ -54,7 +54,7 @@ public:
   {
     return m_val;
   }
-  constexpr auto operator->() noexcept -> T* { return &m_val; }
+  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_val; }
   constexpr auto operator->() const noexcept -> const T* { return &m_val; }
 
 private:
@@ -88,12 +88,12 @@ public:
   auto operator=(const unique_val& other) -> unique_val& = delete;
   unique_val(const unique_val& other) = delete;
 
-  constexpr SMART_VAL_NODISCARD auto get() noexcept -> T& { return m_val; }
+  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T& { return m_val; }
   constexpr SMART_VAL_NODISCARD auto get() const noexcept -> const T&
   {
     return m_val;
   }
-  constexpr SMART_VAL_NODISCARD auto operator*() noexcept -> T&
+  SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() noexcept -> T&
   {
     return m_val;
   }
@@ -101,8 +101,8 @@ public:
   {
     return m_val;
   }
-  constexpr auto operator->() noexcept -> T* { return &m_val; }
-  SMART_VAL_CONSTEXPR14 auto operator->() const noexcept -> const T*
+  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_val; }
+  constexpr auto operator->() const noexcept -> const T*
   {
     return &m_val;
   }
