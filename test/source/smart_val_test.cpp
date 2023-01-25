@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include <catch2/catch.hpp>
 
 #include "smart_val/unique_val.hpp"

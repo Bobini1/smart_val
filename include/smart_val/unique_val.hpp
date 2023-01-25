@@ -103,16 +103,6 @@ private:
   bool m_is_moved_from = false;
 };
 
-template<typename CharT, typename Traits, typename T, typename Destruct>
-auto operator<<(
-    std::basic_ostream<CharT, Traits>& ostream,
-    const unique_val<T, Destruct>& item) noexcept(noexcept(ostream
-                                                           << item.get()))
-    -> std::basic_ostream<CharT, Traits>&
-{
-  return ostream << item.get();
-}
-
 template<typename T, typename... Args>
 constexpr SMART_VAL_NODISCARD auto make_unique_val(Args&&... args) noexcept(
     noexcept(unique_val<T>(SMART_VAL_FWD(args)...))) -> unique_val<T>
@@ -121,19 +111,5 @@ constexpr SMART_VAL_NODISCARD auto make_unique_val(Args&&... args) noexcept(
 }
 
 }  // namespace smart_val
-
-namespace std
-{
-template<typename T, typename Destruct>
-struct hash<smart_val::unique_val<T, Destruct>>
-{
-  SMART_VAL_NODISCARD auto operator()(
-      const smart_val::unique_val<T, Destruct>& item) const
-      noexcept(noexcept(hash<T>()(item.get()))) -> size_t
-  {
-    return hash<T>()(item.get());
-  }
-};
-}  // namespace std
 
 #endif  // SMART_VAL_UNIQUE_VAL_HPP
