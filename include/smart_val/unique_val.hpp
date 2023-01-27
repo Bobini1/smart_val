@@ -91,8 +91,8 @@ public:
   {
     return get();
   }
-  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &get(); }
-  constexpr auto operator->() const noexcept -> const T* { return &get(); }
+  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &m_item; }
+  constexpr auto operator->() const noexcept -> const T* { return &m_item; }
 
 private:
   T m_item;
