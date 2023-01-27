@@ -20,7 +20,8 @@ public:
                std::is_constructible<T, Args...>::value>::type>
   constexpr explicit unique_val(Args&&... args) noexcept(
       noexcept(T(SMART_VAL_FWD(args)...)))
-      : m_item(SMART_VAL_FWD(args)...), m_destruct(default_destruct)
+      : m_item(SMART_VAL_FWD(args)...)
+      , m_destruct(default_destruct)
   {
   }
   template<typename OtherT, typename OtherDestruct>
@@ -32,7 +33,8 @@ public:
   SMART_VAL_CONSTEXPR14 unique_val(unique_val&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
-      : m_item(SMART_VAL_MOV(other.get())), m_destruct(SMART_VAL_MOV(other.get_destruct()))
+      : m_item(SMART_VAL_MOV(other.get()))
+      , m_destruct(SMART_VAL_MOV(other.get_destruct()))
   {
     other.m_is_moved_from = true;
   }
@@ -41,8 +43,8 @@ public:
   unique_val(OtherT&& other_t, OtherDestruct&& other_destruct) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
-      : m_item(static_cast<T>(SMART_VAL_FWD(other_t))),
-               m_destruct(static_cast<Destruct>(SMART_VAL_FWD(other_destruct)))
+      : m_item(static_cast<T>(SMART_VAL_FWD(other_t)))
+      , m_destruct(static_cast<Destruct>(SMART_VAL_FWD(other_destruct)))
   {
   }
   SMART_VAL_CONSTEXPR14 auto operator=(unique_val&& other) noexcept(
@@ -89,14 +91,8 @@ public:
   {
     return get();
   }
-  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T*
-  {
-    return &get();
-  }
-  constexpr auto operator->() const noexcept -> const T*
-  {
-    return &get();
-  }
+  SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T* { return &get(); }
+  constexpr auto operator->() const noexcept -> const T* { return &get(); }
 
 private:
   T m_item;
