@@ -20,7 +20,7 @@ public:
                std::is_constructible<T, Args...>::value>::type>
   constexpr explicit unique_val(Args&&... args) noexcept(
       noexcept(T(SMART_VAL_FWD(args)...)))
-      : m_data(std::make_tuple(T(SMART_VAL_FWD(args)...), default_destruct))
+      : m_item(SMART_VAL_FWD(args)...), m_destruct(default_destruct)
   {
   }
   template<typename OtherT, typename OtherDestruct>
@@ -32,7 +32,7 @@ public:
   SMART_VAL_CONSTEXPR14 unique_val(unique_val&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
-      : m_data(SMART_VAL_MOV(other.get()), SMART_VAL_MOV(other.get_destruct()))
+      : m_item(SMART_VAL_MOV(other.get())), m_destruct(SMART_VAL_MOV(other.get_destruct()))
   {
     other.m_is_moved_from = true;
   }
@@ -41,16 +41,16 @@ public:
   unique_val(OtherT&& other_t, OtherDestruct&& other_destruct) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
           std::is_nothrow_move_constructible<Destruct>::value)
-      : m_data(static_cast<T>(SMART_VAL_FWD(other_t)),
-               static_cast<Destruct>(SMART_VAL_FWD(other_destruct)))
+      : m_item(static_cast<T>(SMART_VAL_FWD(other_t))),
+               m_destruct(static_cast<Destruct>(SMART_VAL_FWD(other_destruct)))
   {
   }
   SMART_VAL_CONSTEXPR14 auto operator=(unique_val&& other) noexcept(
       std::is_nothrow_move_assignable<T>::value&&
           std::is_nothrow_move_assignable<Destruct>::value) -> unique_val&
   {
-    std::get<0>(m_data) = SMART_VAL_MOV(other.get());
-    std::get<1>(m_data) = SMART_VAL_MOV(other.get_destruct());
+    m_item = SMART_VAL_MOV(other.get());
+    m_destruct = SMART_VAL_MOV(other.get_destruct());
     other.m_is_moved_from = true;
     return *this;
   }
@@ -65,21 +65,21 @@ public:
 
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get() noexcept -> T&
   {
-    return std::get<0>(m_data);
+    return m_item;
   }
   constexpr SMART_VAL_NODISCARD auto get() const noexcept -> const T&
   {
-    return std::get<0>(m_data);
+    return m_item;
   }
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto get_destruct() noexcept
       -> Destruct&
   {
-    return std::get<1>(m_data);
+    return m_destruct;
   }
   constexpr SMART_VAL_NODISCARD auto get_destruct() const noexcept
       -> const Destruct&
   {
-    return std::get<1>(m_data);
+    return m_destruct;
   }
   SMART_VAL_CONSTEXPR14 SMART_VAL_NODISCARD auto operator*() noexcept -> T&
   {
@@ -91,15 +91,16 @@ public:
   }
   SMART_VAL_CONSTEXPR14 auto operator->() noexcept -> T*
   {
-    return &std::get<0>(m_data);
+    return &get();
   }
   constexpr auto operator->() const noexcept -> const T*
   {
-    return &std::get<0>(m_data);
+    return &get();
   }
 
 private:
-  std::tuple<T, Destruct> m_data;
+  T m_item;
+  Destruct m_destruct;
   bool m_is_moved_from = false;
 };
 
