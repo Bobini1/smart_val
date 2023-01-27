@@ -27,8 +27,8 @@ public:
   template<typename OtherT, typename OtherDestruct>
   SMART_VAL_CONSTEXPR14 operator unique_val<OtherT, OtherDestruct>() && noexcept
   {
-    return unique_val<OtherT, OtherDestruct>(std::move(get()),
-                                             std::move(get_destruct()));
+    return unique_val<OtherT, OtherDestruct>(SMART_VAL_MOV(get()),
+                                             SMART_VAL_MOV(get_destruct()));
   }
   SMART_VAL_CONSTEXPR14 unique_val(unique_val&& other) noexcept(
       std::is_nothrow_move_constructible<T>::value&&
